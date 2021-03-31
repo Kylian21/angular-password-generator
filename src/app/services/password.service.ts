@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { GeneratedPassword } from '../models/GeneratedPassword'
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class PasswordService {
   constructor(private http:HttpClient) { }
 
   //get password with given options
-  getPassword(limit:string,lenght:string,num:string,upper:string,symbols:string):Observable<string>{
-    return this.http.get<string>(`${this.url}${this.key}&limit=${limit}&length=${lenght}&num=${num}&upper=${upper}&symbols=${symbols}`);
+  getPassword(lenght:string,num:string,upper:string,symbols:string):Observable<GeneratedPassword>{
+    return this.http.get<GeneratedPassword>(`${this.url}${this.key}&limit=1&length=${lenght}&num=${num}&upper=${upper}&symbols=${symbols}`);
   }
   
 }
