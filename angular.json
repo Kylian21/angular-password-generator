@@ -31,7 +31,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/boosted/scss/boosted.scss",
+              "node_modules/boosted/dist/css/orangeIcons.css",
+              "node_modules/boosted/dist/css/orangeHelvetica.css",
+              "node_modules/ng-boosted/style/ng-boosted.scss"
             ],
             "scripts": []
           },
