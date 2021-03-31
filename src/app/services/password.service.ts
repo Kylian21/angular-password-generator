@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class PasswordServiceService {
+export class PasswordService {
   url:string = "https://api.happi.dev/v1/generate-password"
   key:string = "?apikey=9521e215U92Y1HuZTuRNvb8echm9kPliqYz0K8CgUXjLJBs9wNqOQnw9"
 
@@ -13,7 +13,7 @@ export class PasswordServiceService {
 
   //get password with given options
   getPassword(limit:string,lenght:string,num:string,upper:string,symbols:string):Observable<string>{
-    return this.http.get<string>(`${this.url}${key}&limit=${limit}&length=${lenght}&num=${num}&upper=${upper}&symbols=${symbols}`);
+    return this.http.get<string>(`${this.url}${this.key}&limit=${limit}&length=${lenght}&num=${num}&upper=${upper}&symbols=${symbols}`);
   }
   
 }

@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PasswordServiceService } from './password-service.service';
+import { PasswordService } from './password.service';
 
-describe('PasswordServiceService', () => {
-  let service: PasswordServiceService;
+describe('PasswordService', () => {
+  let service: PasswordServiceS;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
