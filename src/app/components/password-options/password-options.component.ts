@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-password-options',
   templateUrl: './password-options.component.html',
-  styleUrls: ['./password-options.component.css']
+  styleUrls: ['./password-options.component.css'],
 })
 export class PasswordOptionsComponent implements OnInit {
-  lenght:number = 10;
+  @Input() lenght!: number;
+  @Input() hasUpperCase!: boolean;
+  @Input() hasSymbols!: boolean;
+  @Input() hasNumbers!: boolean;
+  @Output() onGenerate: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  onClick() {
+    this.onGenerate.emit();
   }
-
 }
