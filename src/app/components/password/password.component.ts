@@ -17,7 +17,7 @@ export class PasswordComponent implements OnInit {
   hasSymbols = new FormControl(true);
   hasNumbers = new FormControl(true);
 
-  constructor(private passwordService: PasswordService) {}
+  constructor(private passwordService: PasswordService,) {}
 
   ngOnInit(): void {}
 
