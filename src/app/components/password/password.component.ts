@@ -10,6 +10,7 @@ import { GeneratedPassword } from '../../models/GeneratedPassword';
   styleUrls: ['./password.component.css'],
 })
 export class PasswordComponent implements OnInit {
+  selectedButton = new FormControl(1);
   password: string = '';
   passwordOptions = new FormGroup({
     length: new FormControl(15),
@@ -20,7 +21,9 @@ export class PasswordComponent implements OnInit {
 
   constructor(private passwordService: PasswordService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.onGenerate();
+  }
 
   onGenerate() {
     this.passwordService
