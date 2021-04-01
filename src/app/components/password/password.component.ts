@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 import { PasswordService } from '../../services/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
@@ -11,10 +12,10 @@ import { GeneratedPassword } from '../../models/GeneratedPassword';
 export class PasswordComponent implements OnInit {
   title: string = 'Your secure password';
   password: string = '';
-  length: number = 16;
-  hasUpperCase: boolean = true;
-  hasSymbols: boolean = true;
-  hasNumbers: boolean = true;
+  length = new FormControl(15);
+  hasUpperCase = new FormControl(true);
+  hasSymbols = new FormControl(true);
+  hasNumbers = new FormControl(true);
 
   constructor(private passwordService: PasswordService) {}
 
@@ -22,7 +23,16 @@ export class PasswordComponent implements OnInit {
 
   onGenerate() {
     this.passwordService
-      .getPassword('10', '0', '0', '0')
+      .getPassword(
+        this.length.value,
+        this.booleanToString(this.hasNumbers.value),
+        this.booleanToString(this.hasUpperCase.value),
+        this.booleanToString(this.hasSymbols.value)
+      )
       .subscribe((passwords: string[]) => (this.password = passwords[0]));
+  }
+
+  booleanToString(value: Boolean): string {
+    return value ? '1' : '0';
   }
 }
