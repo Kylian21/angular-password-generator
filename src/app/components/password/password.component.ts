@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
 import { PasswordService } from '../../services/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
@@ -10,29 +10,26 @@ import { GeneratedPassword } from '../../models/GeneratedPassword';
   styleUrls: ['./password.component.css'],
 })
 export class PasswordComponent implements OnInit {
-  title: string = 'Your secure password';
   password: string = '';
-  length = new FormControl(15);
-  hasUpperCase = new FormControl(true);
-  hasSymbols = new FormControl(true);
-  hasNumbers = new FormControl(true);
+  passwordOptions = new FormGroup({
+    length: new FormControl(15),
+    hasUpperCase: new FormControl(true),
+    hasSymbols: new FormControl(true),
+    hasNumbers: new FormControl(true),
+  });
 
-  constructor(private passwordService: PasswordService,) {}
+  constructor(private passwordService: PasswordService) {}
 
   ngOnInit(): void {}
 
   onGenerate() {
     this.passwordService
       .getPassword(
-        this.length.value,
-        this.booleanToString(this.hasNumbers.value),
-        this.booleanToString(this.hasUpperCase.value),
-        this.booleanToString(this.hasSymbols.value)
+        this.passwordOptions.value.length,
+        this.passwordOptions.value.hasNumbers,
+        this.passwordOptions.value.hasUpperCase,
+        this.passwordOptions.value.hasSymbols
       )
       .subscribe((passwords: string[]) => (this.password = passwords[0]));
-  }
-
-  booleanToString(value: Boolean): string {
-    return value ? '1' : '0';
   }
 }
