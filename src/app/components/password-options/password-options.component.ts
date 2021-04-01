@@ -6,7 +6,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./password-options.component.css'],
 })
 export class PasswordOptionsComponent implements OnInit {
-  @Input() lenght!: number;
+  @Input() length!: number;
   @Input() hasUpperCase!: boolean;
   @Input() hasSymbols!: boolean;
   @Input() hasNumbers!: boolean;

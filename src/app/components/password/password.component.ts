@@ -11,7 +11,7 @@ import { GeneratedPassword } from '../../models/GeneratedPassword';
 export class PasswordComponent implements OnInit {
   title: string = 'Your secure password';
   password: string = '';
-  lenght: number = 16;
+  length: number = 16;
   hasUpperCase: boolean = true;
   hasSymbols: boolean = true;
   hasNumbers: boolean = true;
@@ -23,7 +23,7 @@ export class PasswordComponent implements OnInit {
   onGenerate() {
     // this.passwordService.getPassword('10','0','0','0')
     // .subscribe((data:GeneratedPassword)=>this.password = data.passwords[0]);
-    console.log(`lenght : ${this.lenght}`);
+    console.log(`lenght : ${this.length}`);
     console.log(`upper : ${this.hasUpperCase}`);
     console.log(`symbols : ${this.hasSymbols}`);
     console.log(`hasNumbers : ${this.hasNumbers}`);
