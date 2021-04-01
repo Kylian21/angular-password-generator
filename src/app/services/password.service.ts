@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { GeneratedPassword } from '../models/GeneratedPassword'
 
 @Injectable({
@@ -13,8 +14,11 @@ export class PasswordService {
   constructor(private http:HttpClient) { }
 
   //get password with given options
-  getPassword(lenght:string,num:string,upper:string,symbols:string):Observable<GeneratedPassword>{
-    return this.http.get<GeneratedPassword>(`${this.url}${this.key}&limit=1&length=${lenght}&num=${num}&upper=${upper}&symbols=${symbols}`);
+  getPassword(lenght:string,num:string,upper:string,symbols:string):Observable<string[]>{
+    return this.http.get<GeneratedPassword>(`${this.url}${this.key}&limit=1&length=${lenght}&num=${num}&upper=${upper}&symbols=${symbols}`)
+                    .pipe(
+                      map((data: GeneratedPassword) => data.passwords)
+                    );
   }
   
 }

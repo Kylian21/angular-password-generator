@@ -21,11 +21,8 @@ export class PasswordComponent implements OnInit {
   ngOnInit(): void {}
 
   onGenerate() {
-    // this.passwordService.getPassword('10','0','0','0')
-    // .subscribe((data:GeneratedPassword)=>this.password = data.passwords[0]);
-    console.log(`lenght : ${this.length}`);
-    console.log(`upper : ${this.hasUpperCase}`);
-    console.log(`symbols : ${this.hasSymbols}`);
-    console.log(`hasNumbers : ${this.hasNumbers}`);
+    this.passwordService
+      .getPassword('10', '0', '0', '0')
+      .subscribe((passwords: string[]) => (this.password = passwords[0]));
   }
 }
