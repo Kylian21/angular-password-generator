@@ -16,7 +16,7 @@ import { GeneratedPassword } from '../../models/GeneratedPassword';
 })
 export class PasswordComponent implements OnInit {
   password: string = '';
-
+  error: string = '';
   selectedButton = new FormControl(1);
   passwordOptions = this.fb.group({
     length: [15, [Validators.minLength(8), Validators.maxLength(32)]],
@@ -44,7 +44,12 @@ export class PasswordComponent implements OnInit {
 
     this.passwordService
       .getPassword(length, hasNumbers, hasUpperCase, hasSymbols)
-      .subscribe((passwords: string[]) => (this.password = passwords[0]));
+      .subscribe(
+        (passwords: string[]) => (this.password = passwords[0]),
+        (error) => {
+          this.error = error;
+        }
+      );
   }
 
   get length() {
