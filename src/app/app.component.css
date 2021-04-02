@@ -1,0 +1,9 @@
+.card {
+  width: 30rem;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.card-title {
+  margin-bottom: 30px;
+}
