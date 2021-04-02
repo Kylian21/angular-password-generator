@@ -16,13 +16,14 @@ export class PasswordService {
 
   //get password with given options
   getPassword(
+    limit: number,
     length: number,
     hasNumbers: boolean,
     hasUpperCase: boolean,
     hasSymbols: boolean
   ): Observable<string[]> {
     const params = new HttpParams()
-      .set('limit', '1')
+      .set('limit', limit.toString())
       .set('length', length.toString())
       .set('num', hasNumbers ? '1' : '0')
       .set('upper', hasUpperCase ? '1' : '0')
