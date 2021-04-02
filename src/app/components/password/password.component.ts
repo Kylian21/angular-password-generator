@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormControl,
   FormBuilder,
   Validators,
+  ValidatorFn,
+  AbstractControl,
 } from '@angular/forms';
 
 import { PasswordService } from '../../services/password.service';
@@ -19,7 +19,10 @@ export class PasswordComponent implements OnInit {
   passwords: Observable<ReadonlyArray<string>> | null = null;
   error: string = '';
   passwordOptions = this.fb.group({
-    limit: [1, [Validators.min(1)]],
+    limit: [
+      1,
+      [Validators.required, Validators.min(1), this.numberValidator()],
+    ],
     length: [15, [Validators.minLength(8), Validators.maxLength(32)]],
     hasNumbers: [true],
     hasUpperCase: [true],
@@ -43,19 +46,29 @@ export class PasswordComponent implements OnInit {
       hasUpperCase,
       hasSymbols,
     } = this.passwordOptions.value;
-
-    this.passwords = this.passwordService.getPassword(
-      limit,
-      length,
-      hasNumbers,
-      hasUpperCase,
-      hasSymbols
-    );
+    if (this.passwordOptions.valid) {
+      this.passwords = this.passwordService.getPassword(
+        limit,
+        length,
+        hasNumbers,
+        hasUpperCase,
+        hasSymbols
+      );
+    }
   }
   get passwordOptionsControl() {
     return this.passwordOptions.controls;
   }
   get length() {
     return this.passwordOptions.get('length');
+  }
+
+  numberValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null;
+      }
+      return Number(control.value.toString()) ? null : { invalidNumber: true };
+    };
   }
 }
