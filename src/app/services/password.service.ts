@@ -8,25 +8,25 @@ import { GeneratedPassword } from '../models/GeneratedPassword';
   providedIn: 'root',
 })
 export class PasswordService {
-  url: string = 'https://api.happi.dev/v1/generate-password';
-  key: string =
+  private readonly url: string = 'https://api.happi.dev/v1/generate-password';
+  private readonly key: string =
     '?apikey=9521e215U92Y1HuZTuRNvb8echm9kPliqYz0K8CgUXjLJBs9wNqOQnw9';
 
   constructor(private http: HttpClient) {}
 
   //get password with given options
   getPassword(
-    length: string,
-    num: Boolean,
-    upper: Boolean,
-    symbols: Boolean
+    length: number,
+    hasNumbers: boolean,
+    hasUpperCase: boolean,
+    hasSymbols: boolean
   ): Observable<string[]> {
     const params = new HttpParams()
       .set('limit', '1')
-      .set('length', length)
-      .set('num', num ? '1' : '0')
-      .set('upper', upper ? '1' : '0')
-      .set('symbols', symbols ? '1' : '0');
+      .set('length', length.toString())
+      .set('num', hasNumbers ? '1' : '0')
+      .set('upper', hasUpperCase ? '1' : '0')
+      .set('symbols', hasSymbols ? '1' : '0');
 
     return this.http
       .get<GeneratedPassword>(`${this.url}${this.key}`, { params })

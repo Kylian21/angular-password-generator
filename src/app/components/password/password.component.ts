@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 
 import { PasswordService } from '../../services/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
@@ -10,29 +15,39 @@ import { GeneratedPassword } from '../../models/GeneratedPassword';
   styleUrls: ['./password.component.css'],
 })
 export class PasswordComponent implements OnInit {
-  selectedButton = new FormControl(1);
   password: string = '';
-  passwordOptions = new FormGroup({
-    length: new FormControl(15),
-    hasUpperCase: new FormControl(true),
-    hasSymbols: new FormControl(true),
-    hasNumbers: new FormControl(true),
+
+  selectedButton = new FormControl(1);
+  passwordOptions = this.fb.group({
+    length: [15, [Validators.minLength(8), Validators.maxLength(32)]],
+    hasNumbers: [true],
+    hasUpperCase: [true],
+    hasSymbols: [true],
   });
 
-  constructor(private passwordService: PasswordService) {}
+  constructor(
+    private passwordService: PasswordService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.onGenerate();
   }
 
   onGenerate() {
+    const {
+      length,
+      hasNumbers,
+      hasUpperCase,
+      hasSymbols,
+    } = this.passwordOptions.value;
+
     this.passwordService
-      .getPassword(
-        this.passwordOptions.value.length,
-        this.passwordOptions.value.hasNumbers,
-        this.passwordOptions.value.hasUpperCase,
-        this.passwordOptions.value.hasSymbols
-      )
+      .getPassword(length, hasNumbers, hasUpperCase, hasSymbols)
       .subscribe((passwords: string[]) => (this.password = passwords[0]));
+  }
+
+  get length() {
+    return this.passwordOptions.get('length');
   }
 }
