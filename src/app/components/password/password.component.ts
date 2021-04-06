@@ -8,8 +8,9 @@ import {
 
 import { PasswordService } from '../../services/password/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
+import { HttpErrorResponse } from '../../models/HttpErrorResponse';
 import { Observable, of } from 'rxjs';
-import { switchMap, debounceTime, startWith } from 'rxjs/operators';
+import { switchMap, debounceTime, startWith, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-password',
@@ -18,7 +19,7 @@ import { switchMap, debounceTime, startWith } from 'rxjs/operators';
 })
 export class PasswordComponent {
   readonly passwords: Observable<ReadonlyArray<string>>;
-  error: string = '';
+  error: Observable<string> | any = undefined;
   passwordOptions = this.fb.group({
     limit: [
       1,
@@ -35,6 +36,7 @@ export class PasswordComponent {
     private fb: FormBuilder
   ) {
     this.passwords = this.passwordOptions.valueChanges.pipe(
+      catchError((err: HttpErrorResponse) => (this.error = err.error.message)),
       startWith(this.onGenerate),
       debounceTime(1500),
       switchMap(() => this.onGenerate())

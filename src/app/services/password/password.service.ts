@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, pipe } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
+import { HttpErrorResponse } from '../../models/HttpErrorResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PasswordService {
-  private readonly url: string = 'https://api.happi.dev/v1/generate-password';
+  private readonly url: string = 'https://api.happi.dev/v1/generte-password';
   private readonly key: string =
     '?apikey=9521e215U92Y1HuZTuRNvb8echm9kPliqYz0K8CgUXjLJBs9wNqOQnw9';
 
@@ -31,6 +32,11 @@ export class PasswordService {
 
     return this.http
       .get<GeneratedPassword>(`${this.url}${this.key}`, { params })
-      .pipe(map((data: GeneratedPassword) => data.passwords));
+      .pipe(
+        map((data: GeneratedPassword) => data.passwords),
+        catchError((err: HttpErrorResponse) => {
+          throw err;
+        })
+      );
   }
 }
