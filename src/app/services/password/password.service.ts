@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneratedPassword } from '../models/GeneratedPassword';
+import { GeneratedPassword } from '../../models/GeneratedPassword';
 
 @Injectable({
   providedIn: 'root',
