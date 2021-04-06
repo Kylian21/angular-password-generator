@@ -5,10 +5,10 @@ import {
   ValidatorFn,
   AbstractControl,
 } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { PasswordService } from '../../services/password/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
-import { HttpErrorResponse } from '../../models/HttpErrorResponse';
 import { Observable, of } from 'rxjs';
 import { switchMap, debounceTime, startWith, catchError } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ import { switchMap, debounceTime, startWith, catchError } from 'rxjs/operators';
 })
 export class PasswordComponent {
   readonly passwords: Observable<ReadonlyArray<string>>;
-  error: Observable<string> | any = undefined;
+  error: string = '';
   passwordOptions = this.fb.group({
     limit: [
       1,
@@ -36,9 +36,8 @@ export class PasswordComponent {
     private fb: FormBuilder
   ) {
     this.passwords = this.passwordOptions.valueChanges.pipe(
-      catchError((err: HttpErrorResponse) => (this.error = err.error.message)),
       startWith(this.onGenerate),
-      debounceTime(1500),
+      debounceTime(500),
       switchMap(() => this.onGenerate())
     );
   }
@@ -52,15 +51,16 @@ export class PasswordComponent {
       hasSymbols,
     } = this.passwordOptions.value;
     if (this.passwordOptions.valid) {
-      return this.passwordService.getPassword(
-        limit,
-        length,
-        hasNumbers,
-        hasUpperCase,
-        hasSymbols
-      );
+      return this.passwordService
+        .getPassword(limit, length, hasNumbers, hasUpperCase, hasSymbols)
+        .pipe(
+          catchError((err: HttpErrorResponse) => {
+            this.error = err.error.message;
+            return [];
+          })
+        );
     }
-    return of(['Invalid Options']);
+    return of([]);
   }
   get passwordOptionsControl() {
     return this.passwordOptions.controls;

@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
-import { HttpErrorResponse } from '../../models/HttpErrorResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +37,13 @@ export class PasswordService {
       .get<GeneratedPassword>(`${this.url}${this.key}`, { params })
       .pipe(
         map((data: GeneratedPassword) => data.passwords),
-        catchError((err: HttpErrorResponse) => {
-          throw err;
+        catchError((err: unknown) => {
+          if (err instanceof HttpErrorResponse) {
+            console.log(`throw : ${err.error.message}`);
+            throw err;
+          } else {
+            throw new Error('Not Http error Response');
+          }
         })
       );
   }
