@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '../../models/HttpErrorResponse';
   providedIn: 'root',
 })
 export class PasswordService {
-  private readonly url: string = 'https://api.happi.dev/v1/generte-password';
+  private readonly url: string = 'https://api.happi.dev/v1/generate-password';
   private readonly key: string =
     '?apikey=9521e215U92Y1HuZTuRNvb8echm9kPliqYz0K8CgUXjLJBs9wNqOQnw9';
 
