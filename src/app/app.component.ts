@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { PasswordService } from './services/password.service';
+import { PasswordService } from './services/password/password.service';
 
 @Component({
   selector: 'app-root',

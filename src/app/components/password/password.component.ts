@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -6,24 +6,25 @@ import {
   AbstractControl,
 } from '@angular/forms';
 
-import { PasswordService } from '../../services/password.service';
+import { PasswordService } from '../../services/password/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { switchMap, debounceTime, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.css'],
 })
-export class PasswordComponent implements OnInit {
-  passwords: Observable<ReadonlyArray<string>> | null = null;
+export class PasswordComponent {
+  readonly passwords: Observable<ReadonlyArray<string>>;
   error: string = '';
   passwordOptions = this.fb.group({
     limit: [
       1,
       [Validators.required, Validators.min(1), this.numberValidator()],
     ],
-    length: [15, [Validators.minLength(8), Validators.maxLength(32)]],
+    length: [15, [Validators.min(8), Validators.max(32)]],
     hasNumbers: [true],
     hasUpperCase: [true],
     hasSymbols: [true],
@@ -32,13 +33,15 @@ export class PasswordComponent implements OnInit {
   constructor(
     private passwordService: PasswordService,
     private fb: FormBuilder
-  ) {}
-
-  ngOnInit(): void {
-    this.onGenerate();
+  ) {
+    this.passwords = this.passwordOptions.valueChanges.pipe(
+      startWith(this.onGenerate),
+      debounceTime(1500),
+      switchMap(() => this.onGenerate())
+    );
   }
 
-  onGenerate() {
+  onGenerate(): Observable<string[]> {
     const {
       limit,
       length,
@@ -47,7 +50,7 @@ export class PasswordComponent implements OnInit {
       hasSymbols,
     } = this.passwordOptions.value;
     if (this.passwordOptions.valid) {
-      this.passwords = this.passwordService.getPassword(
+      return this.passwordService.getPassword(
         limit,
         length,
         hasNumbers,
@@ -55,6 +58,7 @@ export class PasswordComponent implements OnInit {
         hasSymbols
       );
     }
+    return of(['Invalid Options']);
   }
   get passwordOptionsControl() {
     return this.passwordOptions.controls;
