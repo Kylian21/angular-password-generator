@@ -4,8 +4,15 @@ import {
   HttpParams,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError, retry } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
+import {
+  map,
+  catchError,
+  retryWhen,
+  scan,
+  delayWhen,
+  tap,
+} from 'rxjs/operators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
 import { PasswordState } from '../../models/PasswordState';
 
@@ -40,14 +47,19 @@ export class PasswordService {
         map((data: GeneratedPassword) => {
           return { passwords: data.passwords, state: 'SUCCESS' };
         }),
-        catchError((err: unknown) => {
-          if (err instanceof HttpErrorResponse) {
-            throw new Error('Server side error : ');
-          } else {
-            throw new Error('Not Http error Response');
-          }
-        }),
-        retry(3)
+        retryWhen((error) =>
+          error.pipe(
+            tap((error) => console.log(`Http Error ${error.status} occured.`)),
+            scan((acc, error) => {
+              if (error.status >= 500) throw new Error('Server side Error');
+              if (error.status === 403) throw new Error('Access Forbiden');
+              if (acc > 3) throw Error('Trouble joining password server');
+              console.log('Retry attempt ' + acc);
+              return acc + 1;
+            }, 1),
+            delayWhen((val) => timer(val * 2000))
+          )
+        )
       );
   }
 }
