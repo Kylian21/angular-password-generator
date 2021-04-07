@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {
   FormBuilder,
+  FormGroup,
   Validators,
   ValidatorFn,
   AbstractControl,
@@ -9,8 +10,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { PasswordService } from '../../services/password/password.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
-import { Observable, of } from 'rxjs';
-import { switchMap, debounceTime, startWith, catchError } from 'rxjs/operators';
+import { PasswordState } from '../../models/PasswordState';
+import { Observable, of, interval } from 'rxjs';
+import {
+  switchMap,
+  debounceTime,
+  startWith,
+  catchError,
+  retryWhen,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-password',
@@ -18,9 +26,8 @@ import { switchMap, debounceTime, startWith, catchError } from 'rxjs/operators';
   styleUrls: ['./password.component.css'],
 })
 export class PasswordComponent {
-  readonly passwords: Observable<ReadonlyArray<string>>;
-  error: string = '';
-  passwordOptions = this.fb.group({
+  readonly componentState: Observable<PasswordState>;
+  passwordOptions: FormGroup = this.fb.group({
     limit: [
       1,
       [Validators.required, Validators.min(1), this.numberValidator()],
@@ -35,14 +42,15 @@ export class PasswordComponent {
     private passwordService: PasswordService,
     private fb: FormBuilder
   ) {
-    this.passwords = this.passwordOptions.valueChanges.pipe(
-      startWith(this.onGenerate),
+    this.componentState = this.passwordOptions.valueChanges.pipe(
       debounceTime(500),
-      switchMap(() => this.onGenerate())
+      startWith(this.onGenerate),
+      switchMap(() => this.onGenerate()),
+      startWith({ passwords: ['Your password is coming'], state: 'LOADING' })
     );
   }
 
-  onGenerate(): Observable<string[]> {
+  onGenerate(): Observable<PasswordState> {
     const {
       limit,
       length,
@@ -54,13 +62,20 @@ export class PasswordComponent {
       return this.passwordService
         .getPassword(limit, length, hasNumbers, hasUpperCase, hasSymbols)
         .pipe(
-          catchError((err: HttpErrorResponse) => {
-            this.error = err.error.message;
-            return [];
+          catchError((err: Error) => {
+            return of({
+              passwords: [],
+              errorMessage: err.message,
+              state: 'ERROR',
+            });
           })
         );
     }
-    return of([]);
+    return of({
+      passwords: [],
+      errorMessage: 'Invalid inputs',
+      state: 'ERROR',
+    });
   }
   get passwordOptionsControl() {
     return this.passwordOptions.controls;
@@ -68,7 +83,6 @@ export class PasswordComponent {
   get length() {
     return this.passwordOptions.get('length');
   }
-
   numberValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (!control.value) {
