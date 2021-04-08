@@ -27,7 +27,7 @@ import {
   styleUrls: ['./password.component.css'],
 })
 export class PasswordComponent {
-  readonly componentState: Observable<PasswordState>;
+  readonly componentState$: Observable<PasswordState>;
   passwordOptions: FormGroup = this.fb.group({
     limit: [
       1,
@@ -48,7 +48,7 @@ export class PasswordComponent {
     private fb: FormBuilder,
     private validationService: InputValidationService
   ) {
-    this.componentState = this.passwordOptions.valueChanges.pipe(
+    this.componentState$ = this.passwordOptions.valueChanges.pipe(
       debounceTime(500),
       startWith(this.onGenerate),
       switchMap(() => this.onGenerate()),

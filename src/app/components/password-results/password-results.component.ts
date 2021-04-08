@@ -9,7 +9,7 @@ import { PasswordState } from '../../models/PasswordState';
   styleUrls: ['./password-results.component.css'],
 })
 export class PasswordResultsComponent {
-  @Input() componentState: Observable<PasswordState> | null = null;
+  @Input() componentState$: Observable<PasswordState> | null = null;
   @Input() passwordOptions: FormGroup = this.fb.group({});
 
   constructor(private fb: FormBuilder) {}
