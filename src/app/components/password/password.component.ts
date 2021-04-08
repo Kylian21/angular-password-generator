@@ -83,10 +83,4 @@ export class PasswordComponent {
       state: 'ERROR',
     });
   }
-  get passwordOptionsControl() {
-    return this.passwordOptions.controls;
-  }
-  get length() {
-    return this.passwordOptions.get('length');
-  }
 }
