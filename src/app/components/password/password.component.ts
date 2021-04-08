@@ -9,6 +9,7 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { PasswordService } from '../../services/password/password.service';
+import { InputValidationService } from '../../services/inputValidation/inputValidation.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
 import { PasswordState } from '../../models/PasswordState';
 import { Observable, of, interval } from 'rxjs';
@@ -30,7 +31,11 @@ export class PasswordComponent {
   passwordOptions: FormGroup = this.fb.group({
     limit: [
       1,
-      [Validators.required, Validators.min(1), this.numberValidator()],
+      [
+        Validators.required,
+        Validators.min(1),
+        this.validationService.numberValidator(),
+      ],
     ],
     length: [15, [Validators.min(8), Validators.max(32)]],
     hasNumbers: [true],
@@ -40,7 +45,8 @@ export class PasswordComponent {
 
   constructor(
     private passwordService: PasswordService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private validationService: InputValidationService
   ) {
     this.componentState = this.passwordOptions.valueChanges.pipe(
       debounceTime(500),
@@ -82,13 +88,5 @@ export class PasswordComponent {
   }
   get length() {
     return this.passwordOptions.get('length');
-  }
-  numberValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (!control.value) {
-        return null;
-      }
-      return Number(control.value.toString()) ? null : { invalidNumber: true };
-    };
   }
 }
