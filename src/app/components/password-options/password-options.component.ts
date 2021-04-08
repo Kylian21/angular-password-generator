@@ -10,8 +10,10 @@ export class PasswordOptionsComponent {
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {}
   get passwordOptionsControl() {
     return this.passwordOptions.controls;
+  }
+  get length() {
+    return this.passwordOptions.get('length');
   }
 }
