@@ -9,9 +9,10 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { AppComponent } from './app.component';
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordOptionsComponent } from './components/password-options/password-options.component';
+import { PasswordResultsComponent } from './components/password-results/password-results.component';
 
 @NgModule({
-  declarations: [AppComponent, PasswordComponent, PasswordOptionsComponent],
+  declarations: [AppComponent, PasswordComponent, PasswordOptionsComponent, PasswordResultsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
