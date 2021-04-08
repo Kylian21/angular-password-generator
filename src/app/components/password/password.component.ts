@@ -50,16 +50,16 @@ export class PasswordComponent {
   ) {
     this.componentState$ = this.passwordOptions.valueChanges.pipe(
       debounceTime(500),
-      startWith(this.onGenerate),
-      switchMap(() => this.onGenerate()),
+      startWith(this.passwordChanges),
+      switchMap(() => this.passwordChanges()),
       startWith({
-        passwords: ['Your password is coming'],
+        passwords: [],
         state: State.Loading,
       })
     );
   }
 
-  onGenerate(): Observable<PasswordState> {
+  passwordChanges(): Observable<PasswordState> {
     const {
       limit,
       length,
