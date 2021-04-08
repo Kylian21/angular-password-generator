@@ -9,7 +9,7 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { PasswordService } from '../../services/password/password.service';
-import { InputValidationService } from '../../services/inputValidation/inputValidation.service';
+import { InputValidators } from '../../validators/InputValidators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
 import { GeneratedPasswordError } from '../../models/GeneratedPasswordError';
 import { PasswordState, State } from '../../models/PasswordState';
@@ -29,13 +29,14 @@ import {
 })
 export class PasswordComponent {
   readonly componentState$: Observable<PasswordState>;
+  readonly inputValidators: InputValidators = new InputValidators();
   passwordOptions: FormGroup = this.fb.group({
     limit: [
       1,
       [
         Validators.required,
         Validators.min(1),
-        this.validationService.numberValidator(),
+        this.inputValidators.numberValidator(),
       ],
     ],
     length: [15, [Validators.min(8), Validators.max(32)]],
@@ -46,8 +47,7 @@ export class PasswordComponent {
 
   constructor(
     private passwordService: PasswordService,
-    private fb: FormBuilder,
-    private validationService: InputValidationService
+    private fb: FormBuilder
   ) {
     this.componentState$ = this.passwordOptions.valueChanges.pipe(
       debounceTime(500),
