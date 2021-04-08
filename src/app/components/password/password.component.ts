@@ -11,7 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PasswordService } from '../../services/password/password.service';
 import { InputValidationService } from '../../services/inputValidation/inputValidation.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
-import { PasswordState } from '../../models/PasswordState';
+import { PasswordState, State } from '../../models/PasswordState';
 import { Observable, of, interval } from 'rxjs';
 import {
   switchMap,
@@ -52,7 +52,10 @@ export class PasswordComponent {
       debounceTime(500),
       startWith(this.onGenerate),
       switchMap(() => this.onGenerate()),
-      startWith({ passwords: ['Your password is coming'], state: 'LOADING' })
+      startWith({
+        passwords: ['Your password is coming'],
+        state: State.Loading,
+      })
     );
   }
 
@@ -72,7 +75,7 @@ export class PasswordComponent {
             return of({
               passwords: [],
               errorMessage: err.message,
-              state: 'ERROR',
+              state: State.Error,
             });
           })
         );
@@ -80,7 +83,7 @@ export class PasswordComponent {
     return of({
       passwords: [],
       errorMessage: 'Invalid inputs',
-      state: 'ERROR',
+      state: State.Error,
     });
   }
 }
