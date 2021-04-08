@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { PasswordState } from '../../models/PasswordState';
+import { LocalStorageService } from '../../services/localStorage/local-storage.service';
 
 @Component({
   selector: 'app-password-results',
@@ -12,5 +13,12 @@ export class PasswordResultsComponent {
   @Input() componentState$: Observable<PasswordState> | null = null;
   @Input() passwordOptions: FormGroup = this.fb.group({});
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private storageService: LocalStorageService
+  ) {}
+
+  onSave(password: string) {
+    this.storageService.savePassword(password);
+  }
 }
