@@ -14,6 +14,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
+import { GeneratedPasswordError } from '../../models/GeneratedPasswordError';
 import { PasswordState, State } from '../../models/PasswordState';
 
 @Injectable({
@@ -51,9 +52,20 @@ export class PasswordService {
           error.pipe(
             tap((error) => console.log(`Http Error ${error.status} occured.`)),
             scan((acc, error) => {
-              if (error.status >= 500) throw new Error('Server side Error');
-              if (error.status === 403) throw new Error('Access Forbiden');
-              if (acc > 3) throw Error('Trouble joining password server');
+              if (error.status >= 500)
+                throw new GeneratedPasswordError(
+                  'Server side Error',
+                  error.status
+                );
+              if (error.status === 403)
+                throw new GeneratedPasswordError(
+                  'Access Forbiden',
+                  error.status
+                );
+              if (acc > 3)
+                throw new GeneratedPasswordError(
+                  'Trouble joining password server'
+                );
               console.log('Retry attempt ' + acc);
               return acc + 1;
             }, 1),

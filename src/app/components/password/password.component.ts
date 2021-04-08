@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PasswordService } from '../../services/password/password.service';
 import { InputValidationService } from '../../services/inputValidation/inputValidation.service';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
+import { GeneratedPasswordError } from '../../models/GeneratedPasswordError';
 import { PasswordState, State } from '../../models/PasswordState';
 import { Observable, of, interval } from 'rxjs';
 import {
@@ -71,12 +72,20 @@ export class PasswordComponent {
       return this.passwordService
         .getPassword(limit, length, hasNumbers, hasUpperCase, hasSymbols)
         .pipe(
-          catchError((err: Error) => {
-            return of({
-              passwords: [],
-              errorMessage: err.message,
-              state: State.Error,
-            });
+          catchError((err: unknown) => {
+            if (err instanceof GeneratedPasswordError) {
+              return of({
+                passwords: [],
+                errorMessage: err.message,
+                state: State.Error,
+              });
+            } else {
+              return of({
+                passwords: [],
+                errorMessage: 'An unexpected error occured',
+                state: State.Error,
+              });
+            }
           })
         );
     }
