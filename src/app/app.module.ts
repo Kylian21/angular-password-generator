@@ -10,9 +10,10 @@ import { AppComponent } from './app.component';
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordOptionsComponent } from './components/password-options/password-options.component';
 import { PasswordResultsComponent } from './components/password-results/password-results.component';
+import { SavedPasswordsComponent } from './components/saved-passwords/saved-passwords.component';
 
 @NgModule({
-  declarations: [AppComponent, PasswordComponent, PasswordOptionsComponent, PasswordResultsComponent],
+  declarations: [AppComponent, PasswordComponent, PasswordOptionsComponent, PasswordResultsComponent, SavedPasswordsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
