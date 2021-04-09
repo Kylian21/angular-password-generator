@@ -10,7 +10,7 @@ import { LocalStorageService } from '../../services/localStorage/local-storage.s
   styleUrls: ['./password-results.component.css'],
 })
 export class PasswordResultsComponent {
-  @Input() componentState$: Observable<PasswordState> | null = null;
+  @Input() componentState: PasswordState | null = null;
   @Input() passwordOptions: FormGroup = this.fb.group({});
 
   constructor(
