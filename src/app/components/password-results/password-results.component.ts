@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { PasswordState, FetchData } from '../../models/PasswordState';
+import { PasswordState, FetchPasswordData } from '../../models/PasswordState';
 import { LocalStorageService } from '../../services/localStorage/local-storage.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class PasswordResultsComponent {
     this.storageService.savePassword(password);
   }
 
-  get fetchData(): typeof FetchData {
-    return FetchData;
+  get FetchPasswordData(): typeof FetchPasswordData {
+    return FetchPasswordData;
   }
 }

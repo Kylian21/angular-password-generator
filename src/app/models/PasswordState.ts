@@ -1,10 +1,10 @@
 export interface PasswordState {
   passwords: ReadonlyArray<string>;
   errorMessage?: string;
-  state: FetchData;
+  state: FetchPasswordData;
 }
 
-export enum FetchData {
+export enum FetchPasswordData {
   Success = 'SUCCESS',
   Loading = 'LOADING',
   Error = 'ERROR',
