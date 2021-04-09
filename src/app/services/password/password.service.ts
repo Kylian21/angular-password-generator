@@ -15,7 +15,7 @@ import {
 } from 'rxjs/operators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
 import { GeneratedPasswordError } from '../../models/GeneratedPasswordError';
-import { PasswordState, State } from '../../models/PasswordState';
+import { PasswordState, FetchData } from '../../models/PasswordState';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +46,7 @@ export class PasswordService {
       .get<GeneratedPassword>(`${this.url}${this.key}`, { params })
       .pipe(
         map((data: GeneratedPassword) => {
-          return { passwords: data.passwords, state: State.Success };
+          return { passwords: data.passwords, state: FetchData.Success };
         }),
         retryWhen((error) =>
           error.pipe(

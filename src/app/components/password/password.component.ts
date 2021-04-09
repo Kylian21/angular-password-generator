@@ -12,7 +12,7 @@ import { PasswordService } from '../../services/password/password.service';
 import { InputValidators } from '../../validators/InputValidators';
 import { GeneratedPassword } from '../../models/GeneratedPassword';
 import { GeneratedPasswordError } from '../../models/GeneratedPasswordError';
-import { PasswordState, State } from '../../models/PasswordState';
+import { PasswordState, FetchData } from '../../models/PasswordState';
 import { Observable, of, interval } from 'rxjs';
 import {
   switchMap,
@@ -55,7 +55,7 @@ export class PasswordComponent {
       switchMap(() => this.passwordChanges()),
       startWith({
         passwords: [],
-        state: State.Loading,
+        state: FetchData.Loading,
       })
     );
   }
@@ -77,13 +77,13 @@ export class PasswordComponent {
               return of({
                 passwords: [],
                 errorMessage: err.message,
-                state: State.Error,
+                state: FetchData.Error,
               });
             } else {
               return of({
                 passwords: [],
                 errorMessage: 'An unexpected error occured',
-                state: State.Error,
+                state: FetchData.Error,
               });
             }
           })
@@ -92,7 +92,7 @@ export class PasswordComponent {
     return of({
       passwords: [],
       errorMessage: 'Invalid inputs',
-      state: State.Error,
+      state: FetchData.Error,
     });
   }
 }
