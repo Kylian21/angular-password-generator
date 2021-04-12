@@ -10,9 +10,9 @@ import { LocalStorageService } from '../../services/localStorage/local-storage.s
   styleUrls: ['./password-results.component.css'],
 })
 export class PasswordResultsComponent {
-  @Input() passwords: ReadonlyArray<string> | undefined = undefined;
-  @Input() errorMessage: string | undefined = undefined;
-  @Input() state: FetchPasswordData | undefined = undefined;
+  @Input() passwords?: ReadonlyArray<string>;
+  @Input() errorMessage?: string = 'Uninitialized Value';
+  @Input() state?: FetchPasswordData = FetchPasswordData.Error;
   @Input() passwordOptions: FormGroup = this.fb.group({});
 
   constructor(
