@@ -58,7 +58,7 @@ export class PasswordService {
               if (error.status >= 500)
                 throw new GeneratedPasswordError('Server side Error');
               if (error.status === 403)
-                throw new GeneratedPasswordError('Access Forbiden');
+                throw new GeneratedPasswordError('Access Forbidden');
               if (acc > 3)
                 throw new GeneratedPasswordError(
                   'Trouble joining password server'
